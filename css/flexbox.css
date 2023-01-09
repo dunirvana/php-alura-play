@@ -54,6 +54,7 @@
 
 .descricao-video .acoes-video a {
     text-decoration: underline;
+    margin-left: 10%;
 }
 
 .descricao-video img {
