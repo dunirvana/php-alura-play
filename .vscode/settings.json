@@ -1,0 +1,10 @@
+{
+  "sqltools.connections": [
+    {
+      "previewLimit": 50,
+      "driver": "SQLite",
+      "database": "${workspaceFolder:php-alura-play}/banco.sqlite",
+      "name": "alura-play"
+    }
+  ]
+}
