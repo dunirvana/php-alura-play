@@ -15,7 +15,7 @@ if ($url === false) {
     exit();
 }
 $titulo = filter_input(INPUT_POST, 'titulo');
-if ($titulo === false) {
+if ($titulo === false && $id !== null) {
     header('Location: /?sucesso=0');
     exit();
 }
