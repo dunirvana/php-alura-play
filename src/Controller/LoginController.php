@@ -16,6 +16,7 @@ class LoginController implements Controller
 
     public function processaRequisicao(): void
     {
+      // todo: refatorar isso!!!
         $email = filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL);
         $password = filter_input(INPUT_POST, 'password');
 
@@ -28,6 +29,9 @@ class LoginController implements Controller
         $correctPassword = password_verify($password, $userData['password'] ?? '');
 
         if ($correctPassword) {
+            session_start();
+            $_SESSION['logado'] = true;
+            
             header('Location: /');
         } else {
             header('Location: /login?sucesso=0');
