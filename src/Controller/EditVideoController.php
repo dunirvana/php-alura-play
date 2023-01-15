@@ -6,6 +6,7 @@ namespace Alura\Mvc\Controller;
 
 use Alura\Mvc\Entity\Video;
 use Alura\Mvc\Repository\VideoRepository;
+use Alura\Mvc\Util\Upload;
 
 class EditVideoController implements Controller
 {
@@ -35,13 +36,8 @@ class EditVideoController implements Controller
     $video = new Video($url, $titulo);
     $video->setId($id);
 
-    if ($_FILES['image'] ['error'] === UPLOAD_ERR_OK) {
-      move_uploaded_file(
-              $_FILES['image'] ['tmp_name'],
-              __DIR__ . '/../../public/img/uploads/' . $_FILES['image'] ['name']
-      );
-      $video->setFilePath($_FILES['image'] ['name']);
-    }
+    $upload = new Upload();
+    $upload->doUploadFile($video);
 
     $success = $this->videoRepository->update($video);
 
