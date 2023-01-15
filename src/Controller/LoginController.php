@@ -3,31 +3,25 @@
 declare(strict_types=1);
 
 namespace Alura\Mvc\Controller;
+use Alura\Mvc\Entity\User;
+use Alura\Mvc\Repository\UserRepository;
 
 class LoginController implements Controller
 {
-    private \PDO $pdo;
 
-    public function __construct()
+    public function __construct(private UserRepository $userRepository)
     {
-        $dbPath = __DIR__ . '/../../banco.sqlite';
-        $this->pdo = new \PDO("sqlite:$dbPath");
     }
 
     public function processaRequisicao(): void
     {
-      // TODO: refatorar isso!!!
-        $email = filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL);
-        $password = filter_input(INPUT_POST, 'password');
+        $user = new User(
+            filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL),
+            filter_input(INPUT_POST, 'password')
+        );
 
-        $sql = 'SELECT * FROM users WHERE email = ?';
-        $statement = $this->pdo->prepare($sql);
-        $statement->bindValue(1, $email);
-        $statement->execute();
-
-        $userData = $statement->fetch(\PDO::FETCH_ASSOC);
-        $correctPassword = password_verify($password, $userData['password'] ?? '');
-
+        $correctPassword = $this->userRepository->userIsValid($user);
+        
         if ($correctPassword) {
             $_SESSION['logado'] = true;
             header('Location: /');
