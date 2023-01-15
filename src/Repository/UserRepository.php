@@ -24,7 +24,7 @@ class UserRepository
     $userData = $statement->fetch(\PDO::FETCH_ASSOC);
     $correctPassword = password_verify($user->getPassword(), $userData['password'] ?? '');
 
-    if (password_needs_rehash($userData['password'], PASSWORD_ARGON2ID)) {
+    if ($correctPassword && password_needs_rehash($userData['password'], PASSWORD_ARGON2ID)) {
       // caso o algoritmo de criptografia mude podemos atualizar os usuários dessa forma para o novo algoritmo, alterando o 'PASSWORD_ARGON2ID' pelo novo
       $statement = $this->pdo->prepare('UPDATE users SET password = ? WHERE id = ?');
       $statement->bindValue(1, password_hash($user->getPassword(), PASSWORD_ARGON2ID));
