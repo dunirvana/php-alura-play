@@ -27,6 +27,8 @@ class NewVideoController implements Controller
     }
 
     $video = new Video($url, $titulo);
+
+    // TODO: refatorar isso para elimiar a duplicação
     if ($_FILES['image'] ['error'] === UPLOAD_ERR_OK) {
  
       move_uploaded_file(

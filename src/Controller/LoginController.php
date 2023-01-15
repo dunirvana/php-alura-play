@@ -16,7 +16,7 @@ class LoginController implements Controller
 
     public function processaRequisicao(): void
     {
-      // todo: refatorar isso!!!
+      // TODO: refatorar isso!!!
         $email = filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL);
         $password = filter_input(INPUT_POST, 'password');
 
