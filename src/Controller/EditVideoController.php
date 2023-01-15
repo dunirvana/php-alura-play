@@ -31,7 +31,7 @@ class EditVideoController implements Controller
       header('Location: /?sucesso=0');
       return;
     }
-
+    
     $video = new Video($url, $titulo);
     $video->setId($id);
 
