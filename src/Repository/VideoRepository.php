@@ -58,7 +58,16 @@ class VideoRepository
     }
 
     return $statement->execute();
+  }
 
+  public function removeCover(int $id): bool
+  {
+    $sql = "UPDATE videos SET image_path = NULL WHERE id = :id;";
+    $statement = $this->pdo->prepare($sql);
+
+    $statement->bindValue(':id', $id, PDO::PARAM_INT);
+
+    return $statement->execute();
   }
 
   /**

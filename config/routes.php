@@ -12,4 +12,5 @@ return [
     'GET|/login' => \Alura\Mvc\Controller\LoginFormController::class,
     'POST|/login' => \Alura\Mvc\Controller\LoginController::class,
     'GET|/logout' => \Alura\Mvc\Controller\LogoutController::class,
+    'GET|/remover-capa' => \Alura\Mvc\Controller\RemoveVideoCoverController::class,
 ];
