@@ -39,6 +39,11 @@ class Video
 
       public function getFilePath(): ?string
       {
+          $filePath = __DIR__ . '/../../public/img/uploads/';
+          if (!file_exists($filePath . $this->filePath)) {
+            return null;
+          }
+
           return $this->filePath;
       }
 }
