@@ -22,7 +22,7 @@ class VideoFormController extends ControllerWithHtml
       $video = $this->repository->find($id);
     }
 
-    $this->renderTemplate('video-form', [
+    echo $this->renderTemplate('video-form', [
       'video' => $video,
     ]);
   }
