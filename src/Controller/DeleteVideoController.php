@@ -14,6 +14,8 @@ class DeleteVideoController implements Controller
 
   public function processaRequisicao(): void
   {
+    // TODO: criar processo para remover imagens sem refrência
+    
     $id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
     if ($id === null || $id === false) {
       header('Location: /?sucesso=0');

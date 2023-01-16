@@ -10,9 +10,8 @@ class Upload
 {
   public function doUploadFile(Video $video): void 
   {
-    // TODO: criar processo de slug para o nome do arquivo
     if ($_FILES['image'] ['error'] === UPLOAD_ERR_OK) {
-      $safeFileName = uniqid('upload_') . '_' . pathinfo($_FILES['image']['name'], PATHINFO_BASENAME);
+      $safeFileName = $this->slugify(uniqid('upload_') . '_' . pathinfo($_FILES['image']['name'], PATHINFO_BASENAME));
       $finfo = new finfo(FILEINFO_MIME_TYPE);
       $mimeType = $finfo->file($_FILES['image']['tmp_name']);
 
@@ -24,4 +23,31 @@ class Upload
       }
     }   
   }
+
+  public function slugify($text, string $divider = '-'): string
+  {
+    // substituir caracteres que não são letras ou digitos po um divisor
+    $text = preg_replace('~[^\pL\d]+~u', $divider, $text);
+  
+    // transliterate
+    $text = iconv('utf-8', 'us-ascii//TRANSLIT', $text);
+  
+    // remove caracteres indesejados
+    $text = preg_replace('~[^-\w]+~', '', $text);
+  
+    // trim
+    $text = trim($text, $divider);
+  
+    // remove divisores duplicados
+    $text = preg_replace('~-+~', $divider, $text);
+  
+    // lowercase
+    $text = strtolower($text);
+  
+    if (empty($text)) {
+      return 'n-a';
+    }
+  
+    return $text;
+  }  
 }
