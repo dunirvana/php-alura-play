@@ -1,4 +1,4 @@
-<?php $this->insert('inicio-html');
+<?php $this->layout('layout');
 /** @var \Alura\Mvc\Entity\Video[] $videoList */
 ?>
 
@@ -28,5 +28,3 @@
         </li>
     <?php endforeach; ?>
 </ul>
-
-<?php $this->insert('fim-html');
