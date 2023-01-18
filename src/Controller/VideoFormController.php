@@ -5,9 +5,8 @@ declare(strict_types=1);
 namespace Alura\Mvc\Controller;
 
 use Alura\Mvc\Entity\Video;
-use Alura\Mvc\Helper\HtmlRendererTrait;
 use Alura\Mvc\Repository\VideoRepository;
-use Alura\Mvc\Helper\FlashMessageTrait;
+use League\Plates\Engine;
 use Nyholm\Psr7\Response;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -15,10 +14,11 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 class VideoFormController implements RequestHandlerInterface
 {
-  use HtmlRendererTrait;
-  
-  public function __construct(private VideoRepository $repository)
-  {
+ 
+  public function __construct(
+    private VideoRepository $repository,
+    private Engine $templates
+    ) {
   }
 
   public function handle(ServerRequestInterface $request): ResponseInterface
@@ -32,6 +32,6 @@ class VideoFormController implements RequestHandlerInterface
       $video = $this->repository->find($id);
     }
 
-    return new Response(200, body: $this->renderTemplate('video-form', [ 'video' => $video, ]));
+    return new Response(200, body: $this->templates->render('video-form', [ 'video' => $video, ]));
   }
 }

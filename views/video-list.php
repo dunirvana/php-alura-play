@@ -1,7 +1,4 @@
-<?php
-
-require_once __DIR__ . '/inicio-html.php';
-
+<?php $this->insert('inicio-html');
 /** @var \Alura\Mvc\Entity\Video[] $videoList */
 ?>
 
@@ -32,4 +29,4 @@ require_once __DIR__ . '/inicio-html.php';
     <?php endforeach; ?>
 </ul>
 
-<?php require_once __DIR__ . '/fim-html.php';
+<?php $this->insert('fim-html');
