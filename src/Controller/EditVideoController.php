@@ -8,6 +8,9 @@ use Alura\Mvc\Entity\Video;
 use Alura\Mvc\Repository\VideoRepository;
 use Alura\Mvc\Util\Upload;
 use Alura\Mvc\Helper\FlashMessageTrait;
+use Nyholm\Psr7\Response;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
 
 class EditVideoController implements Controller
 {
@@ -17,41 +20,53 @@ class EditVideoController implements Controller
   {
   }
 
-  public function processaRequisicao(): void
+  public function processaRequisicao(ServerRequestInterface $request): ResponseInterface
   {
-    $id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
+    $queryParams = $request->getQueryParams();
+    $requestBody = $request->getParsedBody();
+
+    $id = filter_var($queryParams['id'], FILTER_VALIDATE_INT);
     if ($id === false || $id === null) {
-      $this->addErrorMessage('ID obrigatório');
-      header('Location: /editar-video');
-      return;
+      $this->addErrorMessage('ID inválido');
+      return new Response(302, [
+          'Location' => '/editar-video?id=' . $id
+      ]);
     }
 
-    $url = filter_input(INPUT_POST, 'url', FILTER_VALIDATE_URL);
+    $url = filter_var($requestBody['url'], FILTER_VALIDATE_URL);
     if ($url === false) {
       $this->addErrorMessage('URL inválida');
-      header('Location: /editar-video');
-      return;
+      return new Response(302, [
+        'Location' => '/editar-video?id=' . $id
+      ]);
     }
-    $titulo = filter_input(INPUT_POST, 'titulo');
+
+    $titulo = filter_var($requestBody['titulo']);
     if ($titulo === false) {
       $this->addErrorMessage('Título não informado');
-      header('Location: /editar-video');
-      return;
+      return new Response(302, [
+        'Location' => '/editar-video?id=' . $id
+      ]);
     }
     
     $video = new Video($url, $titulo);
     $video->setId($id);
+    $files = $request->getUploadedFiles();
 
     $upload = new Upload();
-    $upload->doUploadFile($video);
+    $upload->doUploadFile($video, $files);
 
     $success = $this->videoRepository->update($video);
 
     if ($success === false) {
       $this->addErrorMessage('Erro ao atualizar vídeo');
-      header('Location: /editar-video');
+      return new Response(302, [
+        'Location' => '/editar-video?id=' . $id
+      ]);
     } else {
-      header('Location: /');
+      return new Response(302, [
+        'Location' => '/'
+      ]);
     }
   }
 }

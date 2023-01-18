@@ -8,20 +8,33 @@ use finfo;
 
 class Upload
 {
-  public function doUploadFile(Video $video): void 
+  public function doUploadFile(Video $video, array $files): void 
   {
-    if ($_FILES['image'] ['error'] === UPLOAD_ERR_OK) {
-      $safeFileName = $this->slugify(uniqid('upload_') . '_' . pathinfo($_FILES['image']['name'], PATHINFO_BASENAME));
-      $finfo = new finfo(FILEINFO_MIME_TYPE);
-      $mimeType = $finfo->file($_FILES['image']['tmp_name']);
+    $uploadedImage = $files['image'];
+    if ($uploadedImage->getError() === UPLOAD_ERR_OK) {
+        $finfo = new \finfo(FILEINFO_MIME_TYPE);
+        $tmpFile = $uploadedImage->getStream()->getMetadata('uri');
+        $mimeType = $finfo->file($tmpFile);
 
-      if(str_starts_with($mimeType, 'image/')){
-        move_uploaded_file(
-          $_FILES['image'] ['tmp_name'],
-          __DIR__ . '/../../public/img/uploads/' . $safeFileName);
-        $video->setFilePath($safeFileName);
-      }
-    }   
+        if (str_starts_with($mimeType, 'image/')) {
+            $safeFileName = $this->slugify(uniqid('upload_') . '_' . pathinfo($uploadedImage->getClientFilename(), PATHINFO_BASENAME));
+            $uploadedImage->moveTo(__DIR__ . '/../../public/img/uploads/' . $safeFileName);
+            $video->setFilePath($safeFileName);
+        }
+    }
+        
+    // if ($_FILES['image'] ['error'] === UPLOAD_ERR_OK) {
+    //   $safeFileName = $this->slugify(uniqid('upload_') . '_' . pathinfo($_FILES['image']['name'], PATHINFO_BASENAME));
+    //   $finfo = new finfo(FILEINFO_MIME_TYPE);
+    //   $mimeType = $finfo->file($_FILES['image']['tmp_name']);
+
+    //   if(str_starts_with($mimeType, 'image/')){
+    //     move_uploaded_file(
+    //       $_FILES['image'] ['tmp_name'],
+    //       __DIR__ . '/../../public/img/uploads/' . $safeFileName);
+    //     $video->setFilePath($safeFileName);
+    //   }
+    // }   
   }
 
   public function slugify($text, string $divider = '-'): string
