@@ -2,15 +2,7 @@
 
 declare(strict_types=1);
 
-use Alura\Mvc\Controller\{
-    Controller,
-    DeleteVideoController,
-    EditVideoController,
-    Error404Controller,
-    NewVideoController,
-    VideoFormController,
-    VideoListController
-};
+use Alura\Mvc\Controller\Error404Controller;
 use Alura\Mvc\Repository\VideoRepository;
 use Alura\Mvc\Repository\UserRepository;
 
@@ -62,8 +54,8 @@ $creator = new \Nyholm\Psr7Server\ServerRequestCreator(
 
 $request = $creator->fromGlobals();
 
-/** @var Controller $controller */
-$response = $controller->processaRequisicao($request);
+/** @var \Psr\Http\Server\RequestHandlerInterface $controller */
+$response = $controller->handle($request);
 
 http_response_code($response->getStatusCode());
 foreach ($response->getHeaders() as $name => $values) {

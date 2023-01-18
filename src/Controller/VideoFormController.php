@@ -5,19 +5,23 @@ declare(strict_types=1);
 namespace Alura\Mvc\Controller;
 
 use Alura\Mvc\Entity\Video;
+use Alura\Mvc\Helper\HtmlRendererTrait;
 use Alura\Mvc\Repository\VideoRepository;
 use Alura\Mvc\Helper\FlashMessageTrait;
 use Nyholm\Psr7\Response;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 
-class VideoFormController extends ControllerWithHtml
+class VideoFormController implements RequestHandlerInterface
 {
+  use HtmlRendererTrait;
+  
   public function __construct(private VideoRepository $repository)
   {
   }
 
-  public function processaRequisicao(ServerRequestInterface $request): ResponseInterface
+  public function handle(ServerRequestInterface $request): ResponseInterface
   {
     $queryParams = $request->getQueryParams();
 
